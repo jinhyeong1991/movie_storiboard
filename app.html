@@ -46,7 +46,8 @@
 
     <label class="field">
       <span>요청사항 (선택)</span>
-      <textarea id="brief" rows="4" placeholder="예) 20대 여성이 주방에서 시원한 물을 마시는 장면. 밝고 깨끗한 분위기. 가격 문구는 넣지 않기."></textarea>
+      <textarea id="brief" rows="4" placeholder="예) 올려 둔 인물 사진의 여성이 주인공. 아침 출근 전 주방에서 시원한 물을 마시며 하루를 시작하는 이야기. 가격 문구는 넣지 않기."></textarea>
+      <small>인물 사진을 함께 올리면 그 사람을 주인공으로 일관되게 사용합니다. 본인이거나 사용 동의를 받은 사진, 또는 AI로 만든 가상 인물만 사용하세요.</small>
     </label>
 
     <div class="grid3">
@@ -76,6 +77,14 @@
       <label class="field"><span>하단 안내 문구</span><input id="pFoot" type="text" placeholder="예) ※ 제휴카드 혜택가는 렌탈사 최대 할인 기준입니다"></label>
       <label class="check"><input id="pText" type="checkbox" checked> 문구를 이미지 안에 넣기 (끄면 문구 자리만 비워 둔 이미지를 만들어, 글자는 나중에 얹어요)</label>
     </fieldset>
+
+    <label class="field" id="fldDialogue"><span>대사</span>
+      <select id="dialogue">
+        <option value="ko" selected>한국어 대사 포함</option>
+        <option value="en">영어 대사 포함</option>
+        <option value="none">대사 없음 (사운드/음악만)</option>
+      </select>
+    </label>
 
     <label class="field"><span>분위기/스타일</span>
       <select id="tone">
