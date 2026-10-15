@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movie Storyboard Helper</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>Movie Storyboard Helper</h1>
+    <p class="sub">제품 이미지 + 상품 URL → 시작/끝 프레임 프롬프트와 스토리보드(한글/영문)</p>
+  </div>
+  <button id="btnSettings" class="ghost" type="button">⚙ 설정</button>
+</header>
+
+<main class="layout">
+  <section class="panel" aria-labelledby="h-input">
+    <h2 id="h-input">1. 입력</h2>
+
+    <label class="field">
+      <span>상품 URL</span>
+      <input id="url" type="url" placeholder="https://... (상품 상세 페이지)">
+      <small>페이지 제목·설명·본문 일부를 읽어 제품 정보를 파악합니다. 읽기에 실패하면 아래 요청사항에 직접 적어 주세요.</small>
+    </label>
+
+    <div class="field">
+      <span>제품/모델 이미지 (최대 4장)</span>
+      <div id="drop" class="drop" tabindex="0" role="button" aria-label="이미지 선택 또는 끌어다 놓기">
+        이미지를 끌어다 놓거나 클릭해서 선택
+        <input id="files" type="file" accept="image/*" multiple hidden>
+      </div>
+      <div id="thumbs" class="thumbs"></div>
+      <label class="check"><input id="useOg" type="checkbox" checked> 이미지를 올리지 않으면 상품 페이지 대표 이미지(og:image)를 자동 사용</label>
+    </div>
+
+    <label class="field">
+      <span>요청사항 (선택)</span>
+      <textarea id="brief" rows="4" placeholder="예) 20대 여성이 주방에서 시원한 물을 마시는 장면. 밝고 깨끗한 분위기. 가격 문구는 넣지 않기."></textarea>
+    </label>
+
+    <div class="grid3">
+      <label class="field"><span>장면 수</span>
+        <select id="sceneCount"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select>
+      </label>
+      <label class="field"><span>클립 길이</span>
+        <select id="clipSec"><option value="4">4초</option><option value="6">6초</option><option value="8" selected>8초</option></select>
+      </label>
+      <label class="field"><span>화면 비율</span>
+        <select id="ratio"><option value="16:9">16:9 가로</option><option value="9:16" selected>9:16 세로</option><option value="1:1">1:1</option></select>
+      </label>
+    </div>
+
+    <label class="field"><span>분위기/스타일</span>
+      <select id="tone">
+        <option>밝고 깨끗한 라이프스타일</option>
+        <option>시네마틱 영화 예고편</option>
+        <option>미니멀 프리미엄 광고</option>
+        <option>귀엽고 따뜻한 미니어처/캐릭터</option>
+        <option>감성 브이로그</option>
+      </select>
+    </label>
+
+    <button id="btnRun" class="primary" type="button">스토리보드 만들기</button>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="panel result" aria-labelledby="h-out">
+    <div class="rowhead">
+      <h2 id="h-out">2. 결과</h2>
+      <div class="actions">
+        <button id="btnCopyAll" class="ghost" type="button" disabled>전체 복사</button>
+        <button id="btnMd" class="ghost" type="button" disabled>.md 저장</button>
+        <button id="btnJson" class="ghost" type="button" disabled>.json 저장</button>
+      </div>
+    </div>
+    <div id="empty" class="empty">왼쪽에서 입력하고 "스토리보드 만들기"를 누르세요.</div>
+    <div id="out" hidden></div>
+  </section>
+</main>
+
+<dialog id="dlg">
+  <form method="dialog" class="dlgbody" id="settingsForm">
+    <h2>설정</h2>
+    <label class="field"><span>AI 제공자</span>
+      <select id="provider">
+        <option value="gemini">Google Gemini</option>
+        <option value="claude">Anthropic Claude</option>
+      </select>
+    </label>
+    <label class="field"><span>API 키</span>
+      <input id="apiKey" type="password" autocomplete="off" placeholder="선택한 제공자의 API 키">
+      <small>이 브라우저의 확장 저장소(chrome.storage.local)에만 저장되고, 선택한 제공자 API 호출에만 사용됩니다. 공용 PC에서는 사용 후 지우세요.</small>
+    </label>
+    <label class="field"><span>모델명</span>
+      <input id="model" type="text" placeholder="gemini-2.5-flash">
+      <small>Gemini 기본: gemini-2.5-flash · Claude 예: claude-sonnet-5-5</small>
+    </label>
+    <hr class="sep">
+    <h3 class="sub-h">프레임 이미지 생성 (Gemini)</h3>
+    <label class="field"><span>이미지 모델명</span>
+      <input id="imageModel" type="text" placeholder="gemini-3.1-flash-image">
+      <small>이미지 생성은 Gemini 이미지 모델만 지원하며 호출할 때마다 과금됩니다.</small>
+    </label>
+    <label class="field"><span>이미지용 Gemini API 키 (선택)</span>
+      <input id="imageKey" type="password" autocomplete="off" placeholder="비워 두면 위 API 키를 사용 (제공자가 Gemini일 때)">
+      <small>AI 제공자를 Claude로 쓰는 경우에만 필요합니다.</small>
+    </label>
+    <div class="dlgactions">
+      <button value="cancel" class="ghost" type="submit">닫기</button>
+      <button id="btnSave" class="primary" value="save" type="submit">저장</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

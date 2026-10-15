@@ -1,0 +1,6 @@
+.claude/
+node_modules/
+*.log
+.env
+.env.*
+*.key
