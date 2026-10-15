@@ -20,6 +20,15 @@
     <h2 id="h-input">1. 입력</h2>
 
     <label class="field">
+      <span>출력 모드</span>
+      <select id="mode">
+        <option value="video">영상 스토리보드 (시작/끝 프레임 + 장면 프롬프트)</option>
+        <option value="photos">스토리 사진 세트 (이야기처럼 이어지는 사진 컷)</option>
+        <option value="poster">포스터 (한 장짜리 광고 이미지)</option>
+      </select>
+    </label>
+
+    <label class="field">
       <span>상품 URL</span>
       <input id="url" type="url" placeholder="https://... (상품 상세 페이지)">
       <small>페이지 제목·설명·본문 일부를 읽어 제품 정보를 파악합니다. 읽기에 실패하면 아래 요청사항에 직접 적어 주세요.</small>
@@ -41,16 +50,32 @@
     </label>
 
     <div class="grid3">
-      <label class="field"><span>장면 수</span>
+      <label class="field"><span id="lblCount">장면 수</span>
         <select id="sceneCount"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select>
       </label>
-      <label class="field"><span>클립 길이</span>
+      <label class="field" id="fldClip"><span>클립 길이</span>
         <select id="clipSec"><option value="4">4초</option><option value="6">6초</option><option value="8" selected>8초</option></select>
       </label>
       <label class="field"><span>화면 비율</span>
-        <select id="ratio"><option value="16:9">16:9 가로</option><option value="9:16" selected>9:16 세로</option><option value="1:1">1:1</option></select>
+        <select id="ratio">
+          <option value="9:16" selected>9:16 인스타 스토리/릴스</option>
+          <option value="4:5">4:5 인스타 피드</option>
+          <option value="1:1">1:1 정사각형</option>
+          <option value="16:9">16:9 가로</option>
+          <option value="3:4">3:4 세로(포스터용)</option>
+        </select>
       </label>
     </div>
+
+    <fieldset id="posterFields" class="poster-box" hidden>
+      <legend>포스터 문구 (비우면 AI가 제안, 가격·혜택은 직접 입력 권장)</legend>
+      <label class="field"><span>헤드라인</span><input id="pHead" type="text" placeholder="예) 작지만, 시원한 변화"></label>
+      <label class="field"><span>서브 카피</span><input id="pSub" type="text" placeholder="예) 주방 한켠, 작지만 시원하게"></label>
+      <label class="field"><span>가격 문구</span><input id="pPrice" type="text" placeholder="예) 월 3,900원 (제휴카드 할인 적용 시)"></label>
+      <label class="field"><span>프로모션 문구</span><input id="pPromo" type="text" placeholder="예) 의무 5·6·7년 반값 할인"></label>
+      <label class="field"><span>하단 안내 문구</span><input id="pFoot" type="text" placeholder="예) ※ 제휴카드 혜택가는 렌탈사 최대 할인 기준입니다"></label>
+      <label class="check"><input id="pText" type="checkbox" checked> 문구를 이미지 안에 넣기 (끄면 문구 자리만 비워 둔 이미지를 만들어, 글자는 나중에 얹어요)</label>
+    </fieldset>
 
     <label class="field"><span>분위기/스타일</span>
       <select id="tone">
@@ -106,6 +131,10 @@
     <label class="field"><span>이미지용 Gemini API 키 (선택)</span>
       <input id="imageKey" type="password" autocomplete="off" placeholder="비워 두면 위 API 키를 사용 (제공자가 Gemini일 때)">
       <small>AI 제공자를 Claude로 쓰는 경우에만 필요합니다.</small>
+    </label>
+    <label class="field"><span>이미지 해상도</span>
+      <select id="imageSize"><option value="1K">1K (저렴)</option><option value="2K">2K (선명, 더 비쌈)</option></select>
+      <small>1K 약 $0.067, 2K 약 $0.10 (gemini-3.1-flash-image 공식 가격 기준, 변동 가능)</small>
     </label>
     <div class="dlgactions">
       <button value="cancel" class="ghost" type="submit">닫기</button>
